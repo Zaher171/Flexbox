@@ -1,0 +1,304 @@
+/* --- VARIABLES GLOBALES --- */
+:root {
+    --primary-color: #e60023; /* Color principal, estilo rojo Pinterest */
+    --dark-overlay: rgba(0, 0, 0, 0.6); /* Capa oscura semi-transparente para overlay */
+    --bg-color: #f0f2f5; /* Color de fondo general, gris muy suave */
+    --card-bg: #ffffff; /* Fondo de las tarjetas */
+    --text-color: #333; /* Color principal del texto */
+    --border-radius: 16px; /* Bordes redondeados para tarjetas y botones */
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera para tarjetas */
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transición suave */
+}
+
+/* --- RESETEO DE MÁRGENES Y PADDING --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Incluye padding y border en el ancho de los elementos */
+}
+
+/* --- ESTILO GENERAL DEL BODY --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Fuente moderna y compatible con sistemas */
+    background-color: var(--bg-color); /* Color de fondo */
+    color: var(--text-color); /* Color del texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+}
+
+/* --- LAYOUT GRID PRINCIPAL --- */
+.layout-grid {
+    display: grid; /* Usamos CSS Grid para organizar la página */
+    min-height: 100vh; /* La altura mínima cubre toda la ventana */
+    grid-template-columns: 1fr; /* Una columna por defecto */
+    grid-template-rows: auto auto 1fr auto; /* Filas: header, nav, main y footer */
+    grid-template-areas: 
+        "header"
+        "nav"
+        "main"
+        "footer"; /* Nombres de áreas para colocar elementos fácilmente */
+}
+
+/* --- HEADER --- */
+.main-header {
+    grid-area: header; /* Ubicación en el grid */
+    background: var(--card-bg); /* Fondo blanco */
+    padding: 1.2rem; /* Espaciado interno */
+    text-align: center; /* Centrar contenido */
+    position: sticky; /* Se mantiene visible al hacer scroll */
+    top: 0; /* Posición superior */
+    z-index: 100; /* Por encima de otros elementos */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Sombra ligera */
+}
+
+.main-header h1 {
+    font-size: 1.8rem; /* Tamaño del título */
+    letter-spacing: -1px; /* Espacio entre letras */
+}
+
+.highlight { 
+    color: var(--primary-color); /* Parte destacada del título en rojo */
+}
+
+/* --- SIDEBAR / NAV --- */
+.sidebar {
+    grid-area: nav; /* Ubicación en el grid */
+    background: var(--card-bg); /* Fondo blanco */
+    padding: 1rem;
+    border-bottom: 1px solid #eee; /* Línea inferior */
+}
+
+.sidebar ul {
+    display: flex; /* Flexbox para los enlaces */
+    justify-content: center; /* Centrar horizontalmente */
+    gap: 30px; /* Separación entre enlaces */
+    list-style: none; /* Sin viñetas */
+}
+
+.sidebar a {
+    text-decoration: none; /* Quitar subrayado */
+    color: #555; /* Color gris para los enlaces */
+    font-weight: 600; /* Negrita ligera */
+    font-size: 1rem;
+    display: flex;
+    align-items: center; /* Icono y texto alineados */
+    gap: 8px; /* Espacio entre icono y texto */
+    transition: var(--transition); /* Animación suave al hover */
+}
+
+.sidebar a:hover, .sidebar a.active { 
+    color: var(--text-color); /* Color oscuro al pasar el ratón o activo */
+}
+
+.sidebar a.active { 
+    color: var(--primary-color); /* Color principal si está activo */
+}
+
+/* --- MAIN CONTENT --- */
+.content-body {
+    grid-area: main; /* Ubicación en el grid */
+    padding: 30px 20px;
+    display: flex; /* Flexbox para las tarjetas */
+    flex-wrap: wrap; /* Permite que las tarjetas pasen a otra línea */
+    justify-content: center; /* Centrar tarjetas */
+    gap: 25px; /* Separación entre tarjetas */
+    align-content: flex-start;
+}
+
+/* --- TARJETAS (CARD) --- */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius); /* Bordes redondeados */
+    box-shadow: var(--shadow); /* Sombra ligera */
+    width: 100%; 
+    max-width: 280px; /* Tamaño máximo de la tarjeta */
+    overflow: hidden; /* Evita que el contenido se salga */
+    transition: var(--transition);
+    cursor: pointer; /* Cambia el cursor al pasar */
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column; /* Imagen arriba, info abajo */
+}
+
+.card:hover, .card:focus-within {
+    transform: translateY(-8px); /* Subida al pasar el ratón */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15); /* Sombra más intensa */
+}
+
+/* --- IMAGEN Y OVERLAY --- */
+.card-image-container {
+    position: relative; /* Para posicionar overlay encima */
+    width: 100%;
+    height: 320px; /* Altura fija de la tarjeta */
+    overflow: hidden;
+}
+
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta la imagen sin deformarla */
+    object-position: center; /* Centra la imagen */
+    display: block;
+    transition: transform 0.5s ease; /* Animación suave para zoom */
+}
+
+.card:hover .card-image-container img {
+    transform: scale(1.1); /* Zoom al pasar el ratón */
+}
+
+/* Overlay Interactivo */
+.overlay {
+    position: absolute; /* Posicionamiento sobre la imagen */
+    inset: 0; /* Ocupa todo el contenedor */
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); /* Degradado */
+    opacity: 0; /* Invisible por defecto */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Texto abajo */
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.card:hover .overlay { 
+    opacity: 1; /* Se muestra al hover */
+}
+
+.overlay-text {
+    color: white;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    transform: translateY(10px);
+    transition: var(--transition);
+}
+
+.card:hover .overlay-text { 
+    transform: translateY(0); /* Subida del texto al aparecer */
+}
+
+.overlay-actions {
+    display: flex;
+    gap: 12px; /* Espacio entre botones */
+}
+
+.btn-icon {
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Botones redondos */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: 0.2s;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra ligera */
+}
+
+.btn-icon:hover {
+    background: #fff;
+    transform: scale(1.1); /* Crece ligeramente */
+}
+
+.like-btn.liked {
+    background: var(--primary-color); /* Cambia a rojo si se ha dado like */
+    color: white;
+}
+
+/* --- INFORMACIÓN INFERIOR DE LA TARJETA --- */
+.card-info {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    z-index: 2;
+    position: relative;
+}
+
+.card-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #444;
+}
+
+.action-btn {
+    padding: 8px 18px;
+    background: #efefef;
+    color: #333;
+    border: none;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-btn:hover { 
+    background: #e0e0e0; /* Cambio de color al pasar ratón */
+}
+
+.action-btn.visited {
+    background: #333;
+    color: white; /* Cambio de estilo si ya se ha visitado */
+}
+
+/* --- FOOTER --- */
+.main-footer {
+    grid-area: footer; /* Ubicación en grid */
+    background: #222; /* Fondo oscuro */
+    color: #aaa; /* Texto gris claro */
+    padding: 3rem 1rem;
+    text-align: center;
+    border-top: 5px solid var(--primary-color); /* Línea roja decorativa */
+}
+
+/* --- MEDIA QUERIES --- */
+/* Pantallas pequeñas y medianas (600px a 800px) */
+@media (600px <= width < 800px) {
+    .layout-grid {
+        grid-template-columns: 200px 1fr; /* Sidebar y contenido */
+        grid-template-areas: 
+            "header header"
+            "nav main"
+            "nav footer";
+    }
+    .sidebar {
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        border-right: 1px solid #ddd;
+        border-bottom: none;
+    }
+    .sidebar ul {
+        flex-direction: column; /* Menú vertical */
+        align-items: flex-start;
+        padding-left: 10px;
+    }
+}
+
+/* Pantallas grandes (>= 800px) */
+@media (width >= 800px) {
+    .layout-grid {
+        grid-template-columns: 240px 1fr; /* Sidebar más ancho */
+        grid-template-areas: 
+            "header header"
+            "nav main"
+            "nav footer";
+    }
+    .sidebar {
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        border-right: 1px solid #ddd;
+        border-bottom: none;
+    }
+    .sidebar ul {
+        flex-direction: column; /* Menú vertical */
+        align-items: flex-start;
+        padding-left: 15px;
+    }
+}
